@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**Platform** | **Version** | **License** | **Author**
+**Platform** | **Version** | **Author**
 :---:|:---:|:---:|:---:
 Windows / PowerShell | MIT | Cloud927
 
@@ -307,7 +307,7 @@ notepad $PROFILE
 
 | Provider | Base URL | Model ID |
 |----------|----------|----------|
-| **DeepSeek** | `https://api.deepseek.com/v1` | `deepseek-chat` / `deepseek-reasoner` |
+| **DeepSeek** | `https://api.deepseek.com/anthropic` | `deepseek-chat` / `deepseek-reasoner` |
 | **MiniMax** | `https://api.minimaxi.com/anthropic` | `MiniMax-M2.1` |
 | **Kimi** | `https://api.moonshot.cn/anthropic` | `kimi-k2.5` |
 | **Claude (Official)** | *(skip)* | `claude-3-5-sonnet-latest` |
@@ -319,3 +319,4 @@ notepad $PROFILE
 **Happy Coding on Windows!** 🚀
 
 </div>
+
