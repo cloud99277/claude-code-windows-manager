@@ -1,9 +1,9 @@
-# <img src="https://img.shields.io/badge/Claude--Code--Profile--Manager-Windows-00b0f0?style=flat-square&logo=microsoft&logoColor=white" alt="Platform: Windows/PowerShell"> Claude-Code-Profile-Manager (Windows Edition)
+# <img src="https://img.shields.io/badge/Claude--Code--Profile--Manager-Windows-00b0f0?style=flat-square&logo=microsoft&logoColor=white" alt="Platform: Windows/PowerShell"> Claude-Code-Profile-Manager (Windows 版)
 
 <div align="center">
 
-**Platform** | **Version** | **Author**
-:---:|:---:|:---:|:---:
+**平台** | **许可证** | **作者**
+:---:|:---:|:---:
 Windows / PowerShell | MIT | Cloud927
 
 让 Windows 终端秒变多模型 AI 启动器
@@ -12,33 +12,33 @@ Windows / PowerShell | MIT | Cloud927
 
 ---
 
-## 📋 Table of Contents
+## 📋 目录
 
-- [Project Overview](#project-overview)
-- [Key Features](#key-features)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Usage Guide](#usage-guide)
-  - [Add Model](#-add-model)
-  - [List Models](#-list-models)
-  - [Remove Model](#-remove-model)
-- [Troubleshooting](#troubleshooting)
+- [项目简介](#项目简介)
+- [核心功能](#核心功能)
+- [环境要求](#环境要求)
+- [快速开始](#快速开始)
+- [使用指南](#使用指南)
+  - [添加模型](#添加模型)
+  - [查看模型列表](#查看模型列表)
+  - [移除模型](#移除模型)
+- [故障排除](#故障排除)
   - [Auth Conflict (Token 冲突)](#auth-conflict-token-冲突)
   - [清理旧配置](#清理旧配置)
-- [Model Configuration Cheat Sheet](#model-configuration-cheat-sheet)
+- [模型配置速查表](#模型配置速查表)
 
 ---
 
-## 🎯 Project Overview
+## 🎯 项目简介
 
 在 Windows 上直接使用 `claude-code` 切换 DeepSeek、Kimi 等模型极其繁琐 —— Windows 环境变量的临时配置远比 Linux 复杂。**CCPM** 专为 PowerShell 设计的自动化脚本，让多模型管理变得像呼吸一样自然。
 
 ---
 
-## ✨ Key Features
+## ✨ 核心功能
 
-| Feature | Description |
-|---------|-------------|
+| 功能 | 说明 |
+|------|------|
 | 🛡️ **环境隔离** | 自动"挂载"和"卸载" API Key，不污染系统环境变量，安全可控 |
 | ⚡️ **秒级切换** | `cdsc` 启动 DeepSeek，`ckm` 启动 Kimi，命令即开即用 |
 | 🔄 **自动装配** | `Add-Model` 向导式配置，交互式填写 API Key 和模型参数 |
@@ -47,13 +47,13 @@ Windows / PowerShell | MIT | Cloud927
 
 ---
 
-## 📦 Prerequisites
+## 📦 环境要求
 
-| Dependency | Version | Required |
-|------------|---------|----------|
+| 依赖项 | 版本 | 是否必需 |
+|--------|------|----------|
 | **Node.js** | >= 18.x | ✅ |
 | **PowerShell** | >= 5.0 | ✅ |
-| **Claude Code CLI** | Latest | ✅ |
+| **Claude Code CLI** | 最新版 | ✅ |
 
 ### 检查 Node.js 是否已安装
 
@@ -77,16 +77,16 @@ claude --version
 
 ---
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
-### Step 1: 打开 PowerShell 配置文件
+### 步骤一：打开 PowerShell 配置文件
 
 ```powershell
 if (!(Test-Path $PROFILE)) { New-Item -Type File -Path $PROFILE -Force }
 notepad $PROFILE
 ```
 
-### Step 2: 注入核心代码
+### 步骤二：注入核心代码
 
 将以下代码**完整复制**到打开的 `$PROFILE` 文件中，保存并关闭：
 
@@ -117,7 +117,7 @@ function Global:Run-Claude ($ProfileName) {
         if ($Config.URL) { $env:ANTHROPIC_BASE_URL = $Config.URL }
         if ($Config.MODEL) { $env:ANTHROPIC_MODEL = $Config.MODEL }
 
-        Write-Host ("🚀 Launching: " + $Config.DISPLAY_NAME) -ForegroundColor Cyan
+        Write-Host ("🚀 启动中: " + $Config.DISPLAY_NAME) -ForegroundColor Cyan
 
         # 启动 Claude
         claude
@@ -128,27 +128,27 @@ function Global:Run-Claude ($ProfileName) {
         $env:ANTHROPIC_MODEL = $OldModel
         $env:ANTHROPIC_AUTH_TOKEN = $OldToken
     } else {
-        Write-Host ("❌ Config not found: " + $ProfileName) -ForegroundColor Red
+        Write-Host ("❌ 配置不存在: " + $ProfileName) -ForegroundColor Red
     }
 }
 
 # 2. 添加模型向导
 function Global:Add-Model {
-    Write-Host "--- Add New Model ---" -ForegroundColor Yellow
+    Write-Host "--- 添加新模型 ---" -ForegroundColor Yellow
 
-    $ShortName = Read-Host "1. Short Name (e.g. dsc)"
+    $ShortName = Read-Host "1. 指令简称 (例如: dsc)"
     if (!$ShortName) { return }
     if (Test-Path "$HOME\.claude_profiles\$ShortName.conf") {
-        Write-Host "Error: Profile already exists" -ForegroundColor Red
+        Write-Host "错误: 该模型已存在" -ForegroundColor Red
         return
     }
 
-    $DisplayName = Read-Host "2. Display Name (e.g. DeepSeek)"
+    $DisplayName = Read-Host "2. 显示名称 (例如: DeepSeek)"
     if (!$DisplayName) { $DisplayName = $ShortName }
 
     $ApiKey = Read-Host "3. API Key"
-    $BaseUrl = Read-Host "4. Base URL (Enter to skip)"
-    $ModelId = Read-Host "5. Model ID"
+    $BaseUrl = Read-Host "4. Base URL (回车跳过)"
+    $ModelId = Read-Host "5. 模型 ID"
 
     $Content = "DISPLAY_NAME=$DisplayName`nKEY=$ApiKey"
     if ($BaseUrl) { $Content += "`nURL=$BaseUrl" }
@@ -159,28 +159,28 @@ function Global:Add-Model {
     # 动态创建快捷命令
     Invoke-Expression "function Global:c$ShortName { Run-Claude '$ShortName' }"
 
-    Write-Host ("✅ Success! Type c$ShortName to launch.") -ForegroundColor Green
+    Write-Host ("✅ 成功! 输入 c$ShortName 即可启动。") -ForegroundColor Green
 }
 
 # 3. 移除模型
 function Global:Remove-Model {
-    $ShortName = Read-Host "Delete which model? (short name)"
+    $ShortName = Read-Host "要删除哪个模型? (输入简称)"
     $Path = "$HOME\.claude_profiles\$ShortName.conf"
     if (Test-Path $Path) {
         Remove-Item $Path
         Remove-Item "function:c$ShortName" -ErrorAction SilentlyContinue
-        Write-Host "✅ Deleted." -ForegroundColor Green
+        Write-Host "✅ 已删除。" -ForegroundColor Green
     } else {
-        Write-Host "❌ Not found." -ForegroundColor Red
+        Write-Host "❌ 未找到。" -ForegroundColor Red
     }
 }
 
 # 4. 列出所有模型
 function Global:Models {
     Write-Host "----------------------------------------"
-    Write-Host "🤖 Claude Code Profiles"
+    Write-Host "🤖 Claude Code 模型列表"
     Write-Host "----------------------------------------"
-    Write-Host "Command          Model Name"
+    Write-Host "命令              模型名称"
     Write-Host "----------------------------------------"
 
     Get-ChildItem "$HOME\.claude_profiles\*.conf" | ForEach-Object {
@@ -192,7 +192,7 @@ function Global:Models {
         Write-Host ($PaddedCmd + " " + $DName)
     }
     Write-Host "----------------------------------------"
-    Write-Host "Add:    Add-Model    |    Remove: Remove-Model"
+    Write-Host "添加模型: Add-Model    |    删除模型: Remove-Model"
 }
 
 # 5. 启动时自动加载所有配置
@@ -204,7 +204,7 @@ Get-ChildItem "$HOME\.claude_profiles\*.conf" | ForEach-Object {
 }
 ```
 
-### Step 3: 使配置生效
+### 步骤三：使配置生效
 
 ```powershell
 . $PROFILE
@@ -214,9 +214,9 @@ Get-ChildItem "$HOME\.claude_profiles\*.conf" | ForEach-Object {
 
 ---
 
-## 📖 Usage Guide
+## 📖 使用指南
 
-### ➕ Add Model
+### 添加模型
 
 ```powershell
 Add-Model
@@ -224,15 +224,15 @@ Add-Model
 
 按提示填写：
 
-| Step | Input | Example |
-|------|-------|---------|
-| 1 | Short Name | `dsc` |
-| 2 | Display Name | `DeepSeek-Chat` |
+| 步骤 | 输入项 | 示例 |
+|------|--------|------|
+| 1 | 指令简称 | `dsc` |
+| 2 | 显示名称 | `DeepSeek-Chat` |
 | 3 | API Key | `sk-xxxxxxxxx` |
 | 4 | Base URL | `https://api.deepseek.com/v1` |
-| 5 | Model ID | `deepseek-chat` |
+| 5 | 模型 ID | `deepseek-chat` |
 
-### 📋 List Models
+### 查看模型列表
 
 ```powershell
 Models
@@ -242,17 +242,17 @@ Models
 
 ```
 ----------------------------------------
-🤖 Claude Code Profiles
+🤖 Claude Code 模型列表
 ----------------------------------------
-Command          Model Name
+命令              模型名称
 ----------------------------------------
 cdsc             DeepSeek-Chat
 ckm              Kimi-K2.5
 ----------------------------------------
-Add:    Add-Model    |    Remove: Remove-Model
+添加模型: Add-Model    |    删除模型: Remove-Model
 ```
 
-### ➖ Remove Model
+### 移除模型
 
 ```powershell
 Remove-Model
@@ -262,7 +262,7 @@ Remove-Model
 
 ---
 
-## 🔧 Troubleshooting
+## 🔧 故障排除
 
 ### Auth Conflict (Token 冲突)
 
@@ -303,14 +303,14 @@ notepad $PROFILE
 
 ---
 
-## 📝 Model Configuration Cheat Sheet
+## 📝 模型配置速查表
 
-| Provider | Base URL | Model ID |
-|----------|----------|----------|
-| **DeepSeek** | `https://api.deepseek.com/anthropic` | `deepseek-chat` / `deepseek-reasoner` |
+| 提供商 | Base URL | 模型 ID |
+|--------|----------|----------|
+| **DeepSeek** | `https://api.deepseek.com/v1` | `deepseek-chat` / `deepseek-reasoner` |
 | **MiniMax** | `https://api.minimaxi.com/anthropic` | `MiniMax-M2.1` |
 | **Kimi** | `https://api.moonshot.cn/anthropic` | `kimi-k2.5` |
-| **Claude (Official)** | *(skip)* | `claude-3-5-sonnet-latest` |
+| **Claude 官方** | *(回车跳过)* | `claude-3-5-sonnet-latest` |
 
 ---
 
